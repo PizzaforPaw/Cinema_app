@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import '../models/movie_model.dart';
+import '../widgets/movie_image.dart';
+import '../services/auth_guard.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final Movie movie;
 
   const MovieDetailScreen({Key? key, required this.movie}) : super(key: key);
+
+  void _handleBooking(BuildContext context) async {
+    // Check if user is logged in before allowing booking
+    final isAuthed = await AuthGuard.checkAuth(context);
+    if (isAuthed && context.mounted) {
+      Navigator.pushNamed(context, '/showtime', arguments: movie);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +34,7 @@ class MovieDetailScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    movie.bannerUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stack) {
-                      return Container(
-                        color: Colors.redAccent.withOpacity(0.3),
-                        child: const Center(
-                          child: Icon(Icons.movie, color: Colors.white24, size: 60),
-                        ),
-                      );
-                    },
-                  ),
+                  MovieImage(path: movie.bannerUrl),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -58,25 +57,16 @@ class MovieDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Poster + Title ──
+                  // Poster + Title
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          movie.posterUrl,
+                        child: MovieImage(
+                          path: movie.posterUrl,
                           width: 100,
                           height: 150,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stack) {
-                            return Container(
-                              width: 100,
-                              height: 150,
-                              color: Colors.white10,
-                              child: const Icon(Icons.movie, color: Colors.white24, size: 40),
-                            );
-                          },
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -93,8 +83,6 @@ class MovieDetailScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
-
-                            // Star rating
                             if (movie.rating > 0)
                               Row(
                                 children: [
@@ -119,8 +107,6 @@ class MovieDetailScreen extends StatelessWidget {
                                 ],
                               ),
                             const SizedBox(height: 10),
-
-                            // Meta info
                             Wrap(
                               spacing: 8,
                               runSpacing: 6,
@@ -137,7 +123,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Genre Tags ──
+                  // Genre Tags
                   if (movie.genre.isNotEmpty) ...[
                     Wrap(
                       spacing: 8,
@@ -157,7 +143,7 @@ class MovieDetailScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
 
-                  // ── Description ──
+                  // Description
                   if (movie.description.isNotEmpty) ...[
                     const Text('Nội dung',
                         style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -167,7 +153,7 @@ class MovieDetailScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
 
-                  // ── Director ──
+                  // Director
                   if (movie.director.isNotEmpty) ...[
                     const Text('Đạo diễn',
                         style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -177,7 +163,7 @@ class MovieDetailScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
 
-                  // ── Cast ──
+                  // Cast
                   if (movie.cast.isNotEmpty) ...[
                     const Text('Diễn viên',
                         style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -226,7 +212,7 @@ class MovieDetailScreen extends StatelessWidget {
         ],
       ),
 
-      // ─── BOOK BUTTON ───
+      // ─── BOOK BUTTON (with auth check) ───
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
@@ -237,9 +223,7 @@ class MovieDetailScreen extends StatelessWidget {
                 backgroundColor: Colors.redAccent,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/showtime', arguments: movie);
-              },
+              onPressed: () => _handleBooking(context),
               child: const Text(
                 'Đặt Vé Ngay',
                 style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold, letterSpacing: 1),

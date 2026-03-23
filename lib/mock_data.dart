@@ -1,6 +1,18 @@
 import 'models/movie_model.dart';
 import 'models/booking_model.dart';
 
+// ──────────────────────────────────────────────────
+// IMAGES: Put your poster/banner files in:
+//   assets/images/posters/    (portrait, ~400x600)
+//   assets/images/banners/    (landscape, ~800x400)
+//
+// Then register them in pubspec.yaml:
+//   flutter:
+//     assets:
+//       - assets/images/posters/
+//       - assets/images/banners/
+// ──────────────────────────────────────────────────
+
 final List<Movie> mockMovies = [
   Movie(
     id: '1',
@@ -8,8 +20,8 @@ final List<Movie> mockMovies = [
     description:
         'Câu chuyện về một tiểu yêu quái đáng yêu sống trên ngọn núi huyền bí, '
         'phải đối mặt với những thử thách để bảo vệ ngôi làng nhỏ bé.',
-    posterUrl: 'https://picsum.photos/seed/movie1/400/600',
-    bannerUrl: 'https://picsum.photos/seed/banner1/800/400',
+    posterUrl: 'assets/images/posters/tieu_yeu_quai.jpg',
+    bannerUrl: 'assets/images/banners/tieu_yeu_quai.jpg',
     duration: '1 giờ 58 phút',
     releaseDate: '23 Thg 1, 2026',
     ageRating: 'P',
@@ -25,8 +37,8 @@ final List<Movie> mockMovies = [
     description:
         'Mai - một người phụ nữ đẹp nhưng lạnh lùng, mang trong mình nỗi đau '
         'quá khứ. Liệu tình yêu có đủ sức chữa lành mọi vết thương?',
-    posterUrl: 'https://picsum.photos/seed/movie2/400/600',
-    bannerUrl: 'https://picsum.photos/seed/banner2/800/400',
+    posterUrl: 'assets/images/posters/mai.jpg',
+    bannerUrl: 'assets/images/banners/mai.jpg',
     duration: '2 giờ 11 phút',
     releaseDate: '10 Thg 2, 2026',
     ageRating: '18',
@@ -42,8 +54,8 @@ final List<Movie> mockMovies = [
     description:
         'Phần tiếp theo của loạt phim hành động ăn khách nhất Việt Nam. '
         'Những bí mật động trời dần được hé lộ trong cuộc chiến công lý.',
-    posterUrl: 'https://picsum.photos/seed/movie3/400/600',
-    bannerUrl: 'https://picsum.photos/seed/banner3/800/400',
+    posterUrl: 'assets/images/posters/lat_mat_7.jpg',
+    bannerUrl: 'assets/images/banners/lat_mat_7.jpg',
     duration: '2 giờ 18 phút',
     releaseDate: '26 Thg 4, 2026',
     ageRating: '13',
@@ -59,8 +71,8 @@ final List<Movie> mockMovies = [
     description:
         'Deadpool và Wolverine hợp tác trong một cuộc phiêu lưu xuyên đa vũ trụ '
         'đầy hài hước và hành động mãn nhãn.',
-    posterUrl: 'https://picsum.photos/seed/movie4/400/600',
-    bannerUrl: 'https://picsum.photos/seed/banner4/800/400',
+    posterUrl: 'assets/images/posters/deadpool.jpg',
+    bannerUrl: 'assets/images/banners/deadpool.jpg',
     duration: '2 giờ 08 phút',
     releaseDate: '15 Thg 3, 2026',
     ageRating: '18',
@@ -83,7 +95,7 @@ List<Showtime> generateMockShowtimes(String movieId) {
     {'name': 'CGV Crescent Mall', 'halls': ['Room 1', 'Room 2']},
   ];
 
-  final times = [10, 13, 15, 18, 20, 22]; // hours
+  final times = [10, 13, 15, 18, 20, 22];
 
   int idCounter = 0;
   for (int day = 0; day < 7; day++) {
@@ -111,7 +123,7 @@ List<Showtime> generateMockShowtimes(String movieId) {
   return showtimes;
 }
 
-// Generate a seat map for a hall (8 rows x 10 seats, rows E-H are VIP)
+// Generate a seat map (8 rows x 10 seats, rows E-H are VIP)
 List<List<Seat>> generateSeatMap() {
   final rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   final vipRows = {'E', 'F', 'G', 'H'};
@@ -124,7 +136,6 @@ List<List<Seat>> generateSeatMap() {
         number: i + 1,
         isVip: vipRows.contains(row),
       );
-      // Randomly mark some seats as booked for demo
       if ((row.hashCode + i) % 7 == 0) {
         seat.status = SeatStatus.booked;
       }

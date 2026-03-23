@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import '../models/movie_model.dart';
 import '../services/movie_service.dart';
+import '../widgets/movie_image.dart';
 import '../mock_data.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -53,7 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.person_outline, color: Colors.white, size: 28),
-          onPressed: () => Navigator.pushNamed(context, '/profile'),
+          onPressed: () {
+            // If logged in → profile, if not → login
+            if (FirebaseAuth.instance.currentUser != null) {
+              Navigator.pushNamed(context, '/profile');
+            } else {
+              Navigator.pushNamed(context, '/login');
+            }
+          },
         ),
         title: const Text(
           'CINEMA',
@@ -84,15 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListView(
             physics: const ClampingScrollPhysics(),
             children: [
-              // 1. BANNER
               _buildBannerCarousel(allMovies),
               const SizedBox(height: 24),
-
-              // 2. TABS
               _buildTabBar(),
               const SizedBox(height: 20),
-
-              // 3. POSTER + INFO
               if (movies.isNotEmpty) ...[
                 _buildPosterCarousel(movies),
                 const SizedBox(height: 20),
@@ -117,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── BANNER ───
   Widget _buildBannerCarousel(List<Movie> bannerMovies) {
+    if (bannerMovies.isEmpty) return const SizedBox.shrink();
     return SizedBox(
       height: 180,
       child: PageView.builder(
@@ -133,37 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.network(
-                      movie.bannerUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return Container(
-                          color: Colors.white10,
-                          child: const Center(
-                            child: CircularProgressIndicator(color: Colors.white24, strokeWidth: 2),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stack) {
-                        return Container(
-                          color: Colors.redAccent.withOpacity(0.3),
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.movie, color: Colors.white38, size: 40),
-                                const SizedBox(height: 8),
-                                Text(movie.title,
-                                    style: const TextStyle(color: Colors.white54, fontSize: 12),
-                                    textAlign: TextAlign.center),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    // Gradient overlay with title
+                    MovieImage(path: movie.bannerUrl),
                     Positioned(
                       bottom: 0, left: 0, right: 0,
                       child: Container(
@@ -247,39 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  movie.posterUrl,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return Container(
-                      color: Colors.white10,
-                      child: const Center(
-                        child: CircularProgressIndicator(color: Colors.white24, strokeWidth: 2),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stack) {
-                    return Container(
-                      color: Colors.redAccent.withOpacity(0.2),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.movie, color: Colors.white38, size: 48),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(movie.title,
-                                  style: const TextStyle(color: Colors.white54),
-                                  textAlign: TextAlign.center),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: MovieImage(path: movie.posterUrl),
               ),
             ),
           );

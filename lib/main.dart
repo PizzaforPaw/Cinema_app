@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/movie_detail_screen.dart';
@@ -45,11 +44,14 @@ class CinemaApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      // Auth-aware root: shows login or home based on Firebase auth state
-      home: const AuthGate(),
+      // Home screen is always the entry — no forced login
+      home: const HomeScreen(),
 
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (_) => const HomeScreen());
+
           case '/login':
             return MaterialPageRoute(builder: (_) => const LoginScreen());
 
@@ -95,41 +97,8 @@ class CinemaApp extends StatelessWidget {
             );
 
           default:
-            return MaterialPageRoute(builder: (_) => const AuthGate());
+            return MaterialPageRoute(builder: (_) => const HomeScreen());
         }
-      },
-    );
-  }
-}
-
-/// AuthGate listens to Firebase auth state and shows the appropriate screen.
-/// - Not logged in → LoginScreen
-/// - Logged in → HomeScreen
-class AuthGate extends StatelessWidget {
-  const AuthGate({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        // Still loading auth state
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: Color(0xFF1A1A2E),
-            body: Center(
-              child: CircularProgressIndicator(color: Colors.redAccent),
-            ),
-          );
-        }
-
-        // User is logged in
-        if (snapshot.hasData) {
-          return const HomeScreen();
-        }
-
-        // User is not logged in
-        return const LoginScreen();
       },
     );
   }

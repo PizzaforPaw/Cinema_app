@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/movie_model.dart';
 import '../../services/movie_service.dart';
+import '../../widgets/movie_image.dart';
 import 'movie_form_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -127,15 +128,11 @@ class _MovieAdminCard extends StatelessWidget {
         contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: movie.posterUrl.isNotEmpty
-              ? Image.network(
-                  movie.posterUrl,
-                  width: 50,
-                  height: 70,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => _posterPlaceholder(),
-                )
-              : _posterPlaceholder(),
+          child: MovieImage(
+            path: movie.posterUrl,
+            width: 50,
+            height: 70,
+          ),
         ),
         title: Text(
           movie.title,
