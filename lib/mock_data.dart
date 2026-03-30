@@ -1,90 +1,122 @@
 import 'models/movie_model.dart';
 import 'models/booking_model.dart';
 
-// ──────────────────────────────────────────────────
-// IMAGES: Put your poster/banner files in:
-//   assets/images/posters/    (portrait, ~400x600)
-//   assets/images/banners/    (landscape, ~800x400)
-//
-// Then register them in pubspec.yaml:
-//   flutter:
-//     assets:
-//       - assets/images/posters/
-//       - assets/images/banners/
-// ──────────────────────────────────────────────────
-
 final List<Movie> mockMovies = [
+  // ═══ NOW SHOWING ═══
   Movie(
     id: '1',
-    title: 'TIỂU YÊU QUÁI NÚI LÃNG LÃNG',
+    title: 'DUNE: PART TWO',
     description:
-        'Câu chuyện về một tiểu yêu quái đáng yêu sống trên ngọn núi huyền bí, '
-        'phải đối mặt với những thử thách để bảo vệ ngôi làng nhỏ bé.',
-    posterUrl: 'assets/images/posters/tieu_yeu_quai.jpg',
-    bannerUrl: 'assets/images/banners/tieu_yeu_quai.jpg',
-    duration: '1 giờ 58 phút',
-    releaseDate: '23 Thg 1, 2026',
-    ageRating: 'P',
-    genre: ['Hoạt hình', 'Phiêu lưu', 'Gia đình'],
-    cast: ['Ngô Thanh Vân', 'Trấn Thành'],
-    director: 'Phan Gia Nhật Linh',
-    rating: 8.2,
+        'Paul Atreides unites with the Fremen on a warpath of revenge against '
+        'those who destroyed his family, facing a choice between the love of '
+        'his life and the fate of the universe.',
+    posterUrl: 'assets/images/posters/dune.jpg',
+    bannerUrl: 'assets/images/posters/dune.jpg',
+    duration: '2h 46m',
+    releaseDate: '01 Mar, 2026',
+    ageRating: '13',
+    genre: ['Sci-Fi', 'Adventure', 'Action'],
+    cast: ['Timothée Chalamet', 'Zendaya', 'Austin Butler'],
+    director: 'Denis Villeneuve',
+    rating: 8.8,
     status: 'now_showing',
   ),
   Movie(
     id: '2',
-    title: 'MAI',
+    title: 'INSIDE OUT 2',
     description:
-        'Mai - một người phụ nữ đẹp nhưng lạnh lùng, mang trong mình nỗi đau '
-        'quá khứ. Liệu tình yêu có đủ sức chữa lành mọi vết thương?',
-    posterUrl: 'assets/images/posters/mai.jpg',
-    bannerUrl: 'assets/images/banners/mai.jpg',
-    duration: '2 giờ 11 phút',
-    releaseDate: '10 Thg 2, 2026',
-    ageRating: '18',
-    genre: ['Tình cảm', 'Tâm lý'],
-    cast: ['Phương Anh Đào', 'Tuấn Trần', 'Hồng Đào'],
-    director: 'Trấn Thành',
-    rating: 7.8,
+        'Riley enters her teenage years and Headquarters undergoes a sudden '
+        'demolition to make room for new emotions: Anxiety, Envy, Ennui and Embarrassment.',
+    posterUrl: 'assets/images/posters/inside_out_2.jpg',
+    bannerUrl: 'assets/images/posters/inside_out_2.jpg',
+    duration: '1h 36m',
+    releaseDate: '14 Jun, 2026',
+    ageRating: 'P',
+    genre: ['Animation', 'Comedy', 'Family'],
+    cast: ['Amy Poehler', 'Maya Hawke', 'Ayo Edebiri'],
+    director: 'Kelsey Mann',
+    rating: 8.0,
     status: 'now_showing',
   ),
   Movie(
     id: '3',
-    title: 'LẬT MẶT 7',
+    title: 'THE BATMAN',
     description:
-        'Phần tiếp theo của loạt phim hành động ăn khách nhất Việt Nam. '
-        'Những bí mật động trời dần được hé lộ trong cuộc chiến công lý.',
-    posterUrl: 'assets/images/posters/lat_mat_7.jpg',
-    bannerUrl: 'assets/images/banners/lat_mat_7.jpg',
-    duration: '2 giờ 18 phút',
-    releaseDate: '26 Thg 4, 2026',
+        'When a sadistic serial killer begins murdering key political figures '
+        'in Gotham, Batman is forced to investigate the city\'s hidden corruption '
+        'and question his family\'s involvement.',
+    posterUrl: 'assets/images/posters/the_batman.jpg',
+    bannerUrl: 'assets/images/posters/the_batman.jpg',
+    duration: '2h 56m',
+    releaseDate: '04 Mar, 2026',
     ageRating: '13',
-    genre: ['Hành động', 'Hình sự'],
-    cast: ['Lý Hải', 'Trương Thế Vinh'],
-    director: 'Lý Hải',
-    rating: 0.0,
-    status: 'coming_soon',
+    genre: ['Action', 'Crime', 'Drama'],
+    cast: ['Robert Pattinson', 'Zoë Kravitz', 'Paul Dano'],
+    director: 'Matt Reeves',
+    rating: 8.1,
+    status: 'now_showing',
   ),
   Movie(
     id: '4',
-    title: 'DEADPOOL & WOLVERINE',
+    title: 'INTERSTELLAR',
     description:
-        'Deadpool và Wolverine hợp tác trong một cuộc phiêu lưu xuyên đa vũ trụ '
-        'đầy hài hước và hành động mãn nhãn.',
-    posterUrl: 'assets/images/posters/deadpool.jpg',
-    bannerUrl: 'assets/images/banners/deadpool.jpg',
-    duration: '2 giờ 08 phút',
-    releaseDate: '15 Thg 3, 2026',
+        'When Earth becomes uninhabitable, a team of explorers travels through '
+        'a wormhole in search of a new home for humanity. A father\'s love '
+        'transcends time and space.',
+    posterUrl: 'assets/images/posters/interstella.jpg',
+    bannerUrl: 'assets/images/posters/interstella.jpg',
+    duration: '2h 49m',
+    releaseDate: 'Re-release',
+    ageRating: '13',
+    genre: ['Sci-Fi', 'Drama', 'Adventure'],
+    cast: ['Matthew McConaughey', 'Anne Hathaway', 'Jessica Chastain'],
+    director: 'Christopher Nolan',
+    rating: 9.2,
+    status: 'now_showing',
+  ),
+  Movie(
+    id: '5',
+    title: 'EVERYTHING EVERYWHERE ALL AT ONCE',
+    description:
+        'A middle-aged Chinese immigrant is swept up in an insane adventure '
+        'where she alone can save existence by exploring other universes '
+        'and connecting with the lives she could have led.',
+    posterUrl: 'assets/images/posters/eeaao.jpg',
+    bannerUrl: 'assets/images/posters/eeaao.jpg',
+    duration: '2h 19m',
+    releaseDate: '25 Mar, 2026',
+    ageRating: '16',
+    genre: ['Sci-Fi', 'Action', 'Comedy'],
+    cast: ['Michelle Yeoh', 'Ke Huy Quan', 'Jamie Lee Curtis'],
+    director: 'Daniel Kwan, Daniel Scheinert',
+    rating: 8.9,
+    status: 'now_showing',
+  ),
+
+  // ═══ COMING SOON ═══
+  Movie(
+    id: '6',
+    title: 'OPPENHEIMER',
+    description:
+        'The story of J. Robert Oppenheimer, the American physicist who led '
+        'the Manhattan Project to develop the atomic bomb during World War II.',
+    posterUrl: 'assets/images/posters/oppenheimer.jpg',
+    bannerUrl: 'assets/images/posters/oppenheimer.jpg',
+    duration: '3h 00m',
+    releaseDate: '15 Apr, 2026',
     ageRating: '18',
-    genre: ['Hành động', 'Hài hước', 'Siêu anh hùng'],
-    cast: ['Ryan Reynolds', 'Hugh Jackman'],
-    director: 'Shawn Levy',
+    genre: ['Biography', 'History', 'Drama'],
+    cast: ['Cillian Murphy', 'Robert Downey Jr.', 'Emily Blunt'],
+    director: 'Christopher Nolan',
     rating: 9.0,
-    status: 'special',
+    status: 'coming_soon',
   ),
 ];
 
-// Generate showtimes for the next 7 days
+// ──────────────────────────────────────────────────
+// SHOWTIMES & SEATS
+// ──────────────────────────────────────────────────
+
 List<Showtime> generateMockShowtimes(String movieId) {
   final List<Showtime> showtimes = [];
   final now = DateTime.now();
@@ -123,7 +155,6 @@ List<Showtime> generateMockShowtimes(String movieId) {
   return showtimes;
 }
 
-// Generate a seat map (8 rows x 10 seats, rows E-H are VIP)
 List<List<Seat>> generateSeatMap() {
   final rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   final vipRows = {'E', 'F', 'G', 'H'};

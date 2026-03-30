@@ -4,8 +4,8 @@ class Movie {
   final String id;
   final String title;
   final String description;
-  final String posterUrl;  // Can be asset path (assets/...) or network URL (https://...)
-  final String bannerUrl;  // Can be asset path (assets/...) or network URL (https://...)
+  final String posterUrl;
+  final String bannerUrl;
   final String trailerUrl;
   final String duration;
   final String releaseDate;
@@ -33,7 +33,6 @@ class Movie {
     this.status = 'now_showing',
   });
 
-  /// Check if an image path is a local asset
   static bool isAsset(String path) => path.startsWith('assets/');
 
   factory Movie.fromFirestore(DocumentSnapshot doc) {

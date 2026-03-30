@@ -7,7 +7,6 @@ class MovieService {
   /// Stream all movies (real-time updates)
   static Stream<List<Movie>> streamAllMovies() {
     return _moviesRef
-        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Movie.fromFirestore(doc)).toList();

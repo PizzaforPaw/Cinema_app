@@ -29,7 +29,10 @@ class MovieImage extends StatelessWidget {
         fit: fit,
         width: width,
         height: height,
-        errorBuilder: (_, __, ___) => _placeholder(),
+        errorBuilder: (_, error, ___) {
+          debugPrint('Asset image failed: $path — $error');
+          return _placeholder();
+        },
       );
     }
 
@@ -49,7 +52,10 @@ class MovieImage extends StatelessWidget {
           ),
         );
       },
-      errorBuilder: (_, __, ___) => _placeholder(),
+      errorBuilder: (_, error, ___) {
+        debugPrint('Network image failed: $path — $error');
+        return _placeholder();
+      },
     );
   }
 

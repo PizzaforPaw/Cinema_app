@@ -18,8 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedTabIndex = 0;
 
   Timer? _bannerTimer;
-  final PageController _bannerController = PageController(viewportFraction: 0.9);
-  final PageController _posterController = PageController(viewportFraction: 0.7);
+  final PageController _bannerController = PageController(
+    viewportFraction: 0.9,
+    initialPage: 500, // Start in middle so user can scroll left too
+  );
+  final PageController _posterController = PageController(
+    viewportFraction: 0.7,
+    initialPage: 500,
+  );
 
   final List<String> _tabs = ['Đang chiếu', 'Sắp chiếu', 'Đặc biệt'];
   final List<String> _tabStatus = ['now_showing', 'coming_soon', 'special'];
@@ -79,8 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: StreamBuilder<List<Movie>>(
         stream: MovieService.streamAllMovies(),
         builder: (context, snapshot) {
-          // Use Firestore data if available, fall back to mock data
-          final allMovies = snapshot.data ?? mockMovies;
+          // Fall back to mock data if: Firestore errors, still loading, or empty
+          List<Movie> allMovies;
+          if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+            allMovies = mockMovies;
+          } else {
+            allMovies = snapshot.data!;
+          }
 
           final movies = allMovies
               .where((m) => m.status == _tabStatus[_selectedTabIndex])
@@ -126,9 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 180,
       child: PageView.builder(
         controller: _bannerController,
-        itemCount: bannerMovies.length,
+        itemCount: bannerMovies.length * 1000, // large number for infinite loop
         itemBuilder: (context, index) {
-          final movie = bannerMovies[index];
+          final movie = bannerMovies[index % bannerMovies.length];
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: GestureDetector(
@@ -208,14 +219,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── POSTER CAROUSEL ───
   Widget _buildPosterCarousel(List<Movie> movies) {
+    // Single movie — just show it centered, no carousel
+    if (movies.length == 1) {
+      return SizedBox(
+        height: 360,
+        child: Center(
+          child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/movie-detail', arguments: movies[0]),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: MovieImage(path: movies[0].posterUrl),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Multiple movies — infinite loop carousel
     return SizedBox(
       height: 360,
       child: PageView.builder(
         controller: _posterController,
-        itemCount: movies.length,
-        onPageChanged: (index) => setState(() => _currentPosterIndex = index),
+        itemCount: movies.length * 1000,
+        onPageChanged: (index) => setState(() => _currentPosterIndex = index % movies.length),
         itemBuilder: (context, index) {
-          final movie = movies[index];
+          final movie = movies[index % movies.length];
           return GestureDetector(
             onTap: () => Navigator.pushNamed(context, '/movie-detail', arguments: movie),
             child: Padding(
