@@ -1,5 +1,6 @@
 import 'models/movie_model.dart';
 import 'models/booking_model.dart';
+import 'models/news_model.dart';
 
 final List<Movie> mockMovies = [
   // ═══ NOW SHOWING ═══
@@ -137,8 +138,12 @@ List<Showtime> generateMockShowtimes(String movieId) {
       for (var time in times) {
         idCounter++;
         final hall = halls[idCounter % halls.length];
-        final screenType = idCounter % 5 == 0 ? 'IMAX' : (idCounter % 3 == 0 ? '3D' : '2D');
-        final basePrice = screenType == 'IMAX' ? 150000 : (screenType == '3D' ? 100000 : 75000);
+        final screenType = idCounter % 7 == 0
+            ? '4DX'
+            : (idCounter % 5 == 0 ? 'IMAX' : (idCounter % 3 == 0 ? '3D' : '2D'));
+        final basePrice = screenType == '4DX'
+            ? 200000
+            : (screenType == 'IMAX' ? 150000 : (screenType == '3D' ? 100000 : 75000));
 
         showtimes.add(Showtime(
           id: 'st_$idCounter',
@@ -174,3 +179,65 @@ List<List<Seat>> generateSeatMap() {
     });
   }).toList();
 }
+
+// ──────────────────────────────────────────────────
+// MOVIE NEWS
+// ──────────────────────────────────────────────────
+
+final List<MovieNews> mockNews = [
+  MovieNews(
+    id: '1',
+    title: 'Avatar 4: First Trailer Breaks Viewing Records',
+    summary:
+        'The first trailer for Avatar: Fire and Ash has broken all-time viewing records '
+        'with over 200 million views in 24 hours, surpassing the previous record.',
+    imageUrl: 'assets/images/posters/avatar.jpg',
+    date: '28 Mar, 2026',
+    source: 'Variety',
+    tag: 'Hot',
+  ),
+  MovieNews(
+    id: '2',
+    title: 'Christopher Nolan Announces New Film for 2027',
+    summary:
+        'After the massive success of Oppenheimer, director Christopher Nolan reveals '
+        'he is working on a new original sci-fi project with Universal Pictures.',
+    imageUrl: 'assets/images/posters/oppenheimer.jpg',
+    date: '25 Mar, 2026',
+    source: 'The Hollywood Reporter',
+    tag: 'Upcoming',
+  ),
+  MovieNews(
+    id: '3',
+    title: 'Inside Out 2 Crosses \$1.5 Billion Worldwide',
+    summary:
+        'Pixar\'s Inside Out 2 becomes the highest-grossing animated film of all time, '
+        'surpassing Frozen II with \$1.5 billion at the global box office.',
+    imageUrl: 'assets/images/posters/inside_out_2.jpg',
+    date: '22 Mar, 2026',
+    source: 'Box Office Mojo',
+    tag: 'Box Office',
+  ),
+  MovieNews(
+    id: '4',
+    title: 'The Batman 2: Robert Pattinson Returns to Gotham',
+    summary:
+        'Warner Bros. confirms The Batman sequel is officially in production. Matt Reeves '
+        'returns to direct with a darker, more psychological storyline.',
+    imageUrl: 'assets/images/posters/the_batman.jpg',
+    date: '20 Mar, 2026',
+    source: 'Deadline',
+    tag: 'Upcoming',
+  ),
+  MovieNews(
+    id: '5',
+    title: 'Oscar Predictions: Early Frontrunners for 2027',
+    summary:
+        'Film critics are already buzzing about potential Oscar contenders for next year, '
+        'with several festival darlings generating significant buzz.',
+    imageUrl: 'assets/images/posters/eeaao.jpg',
+    date: '18 Mar, 2026',
+    source: 'IndieWire',
+    tag: 'Awards',
+  ),
+];

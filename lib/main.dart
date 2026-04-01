@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'services/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/movie_detail_screen.dart';
 import 'screens/showtime_screen.dart';
 import 'screens/seat_selection_screen.dart';
 import 'screens/checkout_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/auth/profile_screen.dart';
@@ -21,30 +23,31 @@ void main() async {
   runApp(const CinemaApp());
 }
 
-class CinemaApp extends StatelessWidget {
+class CinemaApp extends StatefulWidget {
   const CinemaApp({Key? key}) : super(key: key);
 
-  static const Color primaryRed = Color(0xFFC62828);
-  static const Color darkBg = Color(0xFF1A1A2E);
-  static const Color accentGold = Color(0xFFFFD700);
+  @override
+  State<CinemaApp> createState() => _CinemaAppState();
+}
+
+class _CinemaAppState extends State<CinemaApp> {
+  final ThemeProvider _themeProvider = ThemeProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    _themeProvider.addListener(() => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cinema Booking',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: darkBg,
-        colorScheme: ColorScheme.dark(
-          primary: primaryRed,
-          secondary: accentGold,
-          surface: const Color(0xFF16213E),
-        ),
-        useMaterial3: true,
-      ),
+      theme: ThemeProvider.lightTheme,
+      darkTheme: ThemeProvider.darkTheme,
+      themeMode: _themeProvider.themeMode,
 
-      // Home screen is always the entry — no forced login
       home: const HomeScreen(),
 
       onGenerateRoute: (settings) {
@@ -60,6 +63,11 @@ class CinemaApp extends StatelessWidget {
 
           case '/profile':
             return MaterialPageRoute(builder: (_) => const ProfileScreen());
+
+          case '/settings':
+            return MaterialPageRoute(
+              builder: (_) => SettingsScreen(themeProvider: _themeProvider),
+            );
 
           case '/admin':
             return MaterialPageRoute(builder: (_) => const AdminDashboard());

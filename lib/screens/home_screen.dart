@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import '../models/movie_model.dart';
+import '../models/news_model.dart';
 import '../services/movie_service.dart';
 import '../widgets/movie_image.dart';
 import '../mock_data.dart';
@@ -55,12 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.person_outline, color: Colors.white, size: 28),
+          icon: Icon(Icons.person_outline, color: textColor, size: 28),
           onPressed: () {
             // If logged in → profile, if not → login
             if (FirebaseAuth.instance.currentUser != null) {
@@ -70,16 +74,22 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-        title: const Text(
+        title: Text(
           'CINEMA',
           style: TextStyle(
-            color: Colors.white,
+            color: textColor,
             fontWeight: FontWeight.w900,
             fontSize: 26,
             letterSpacing: 4,
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings_outlined, color: textColor, size: 24),
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
+          ),
+        ],
       ),
 
       body: StreamBuilder<List<Movie>>(
@@ -113,15 +123,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 _buildMovieInfo(movies),
               ] else
-                const Padding(
-                  padding: EdgeInsets.all(40),
+                Padding(
+                  padding: const EdgeInsets.all(40),
                   child: Center(
                     child: Text(
                       'Không có phim trong mục này.',
-                      style: TextStyle(color: Colors.white54, fontSize: 16),
+                      style: TextStyle(color: isDark ? Colors.white54 : Colors.black45, fontSize: 16),
                     ),
                   ),
                 ),
+              const SizedBox(height: 32),
+
+              // 4. NEWS SECTION
+              _buildNewsSection(isDark),
+
               const SizedBox(height: 40),
             ],
           );
@@ -163,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: Text(
                           movie.title,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -181,6 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── TABS ───
   Widget _buildTabBar() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final inactiveColor = isDark ? Colors.white38 : Colors.black38;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(_tabs.length, (index) {
@@ -195,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 _tabs[index],
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.white38,
+                  color: isSelected ? activeColor : inactiveColor,
                   fontSize: 16,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -264,6 +283,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── MOVIE INFO + BOOKING ───
   Widget _buildMovieInfo(List<Movie> movies) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final titleColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final subtextColor = isDark ? Colors.white54 : Colors.black54;
+
     final movie = movies[_currentPosterIndex];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -275,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   movie.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: titleColor, fontSize: 18, fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -290,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 12),
                     ],
                     Text(movie.duration,
-                        style: const TextStyle(color: Colors.white54, fontSize: 13)),
+                        style: TextStyle(color: subtextColor, fontSize: 13)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -319,5 +342,164 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  // ─── NEWS SECTION ───
+  Widget _buildNewsSection(bool isDark) {
+    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final subtextColor = isDark ? Colors.white54 : Colors.black54;
+    final cardColor = isDark ? const Color(0xFF16213E) : Colors.white;
+    final borderColor = isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.08);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Tin tức phim',
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: subtextColor, size: 16),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Horizontal news cards
+        SizedBox(
+          height: 220,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: mockNews.length,
+            itemBuilder: (context, index) {
+              final news = mockNews[index];
+              return _buildNewsCard(news, isDark, textColor, subtextColor, cardColor, borderColor);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNewsCard(
+    MovieNews news,
+    bool isDark,
+    Color textColor,
+    Color subtextColor,
+    Color cardColor,
+    Color borderColor,
+  ) {
+    return Container(
+      width: 280,
+      margin: const EdgeInsets.only(right: 14),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor),
+        boxShadow: isDark
+            ? []
+            : [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: double.infinity,
+                  child: MovieImage(path: news.imageUrl),
+                ),
+                // Tag badge
+                if (news.tag.isNotEmpty)
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _tagColor(news.tag),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        news.tag,
+                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Content
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    news.title,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      height: 1.3,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      if (news.source.isNotEmpty) ...[
+                        Text(
+                          news.source,
+                          style: TextStyle(color: subtextColor, fontSize: 11),
+                        ),
+                        Text(' · ', style: TextStyle(color: subtextColor, fontSize: 11)),
+                      ],
+                      Text(
+                        news.date,
+                        style: TextStyle(color: subtextColor, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _tagColor(String tag) {
+    switch (tag) {
+      case 'Hot':
+        return Colors.redAccent;
+      case 'Upcoming':
+        return Colors.blue;
+      case 'Box Office':
+        return Colors.green;
+      case 'Awards':
+        return Colors.amber.shade700;
+      case 'Review':
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
   }
 }

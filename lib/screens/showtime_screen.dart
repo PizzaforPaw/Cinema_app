@@ -16,6 +16,7 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
   late List<DateTime> _availableDates;
   int _selectedDateIndex = 0;
   String? _selectedCinema;
+  String? _selectedScreenType;
 
   @override
   void initState() {
@@ -39,12 +40,20 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
       final sameDay = st.dateTime.year == selectedDate.year &&
           st.dateTime.month == selectedDate.month &&
           st.dateTime.day == selectedDate.day;
-      if (_selectedCinema != null) {
-        return sameDay && st.cinemaName == _selectedCinema;
-      }
-      return sameDay;
+      if (!sameDay) return false;
+      if (_selectedCinema != null && st.cinemaName != _selectedCinema) return false;
+      if (_selectedScreenType != null && st.screenType != _selectedScreenType) return false;
+      return true;
     }).toList()
       ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+  }
+
+  List<String> get _screenTypes {
+    final types = <String>{};
+    for (var st in _allShowtimes) {
+      types.add(st.screenType);
+    }
+    return types.toList()..sort();
   }
 
   List<String> get _cinemaNames {
@@ -167,6 +176,27 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
             ),
           ),
 
+          const SizedBox(height: 12),
+
+          // ─── SCREEN TYPE FILTER ───
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _filterChip('Tất cả', _selectedScreenType == null, () {
+                  setState(() => _selectedScreenType = null);
+                }),
+                ..._screenTypes.map((type) {
+                  return _filterChip(type, _selectedScreenType == type, () {
+                    setState(() => _selectedScreenType = type);
+                  });
+                }),
+              ],
+            ),
+          ),
+
           const SizedBox(height: 16),
 
           // ─── SHOWTIME LIST ───
@@ -255,7 +285,11 @@ class _ShowtimeScreenState extends State<ShowtimeScreen> {
                                               ? Colors.white12
                                               : (st.screenType == 'IMAX'
                                                   ? Colors.amber
-                                                  : Colors.white38),
+                                                  : st.screenType == '4DX'
+                                                      ? Colors.cyanAccent
+                                                      : st.screenType == '3D'
+                                                          ? Colors.lightBlueAccent
+                                                          : Colors.white38),
                                           fontSize: 11,
                                         ),
                                       ),
