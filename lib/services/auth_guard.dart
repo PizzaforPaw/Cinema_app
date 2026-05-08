@@ -31,23 +31,28 @@ class _LoginPromptSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? const Color(0xFF16213E) : Colors.white;
+    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final subtextColor = isDark ? Colors.white54 : Colors.black54;
+    final handleColor = isDark ? Colors.white24 : Colors.black12;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-      decoration: const BoxDecoration(
-        color: Color(0xFF16213E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
         top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Handle bar
             Container(
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white24,
+                color: handleColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -65,18 +70,18 @@ class _LoginPromptSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            const Text(
+            Text(
               'Đăng nhập để tiếp tục',
               style: TextStyle(
-                color: Colors.white,
+                color: textColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Bạn cần đăng nhập để đặt vé xem phim',
-              style: TextStyle(color: Colors.white54, fontSize: 14),
+              style: TextStyle(color: subtextColor, fontSize: 14),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 28),

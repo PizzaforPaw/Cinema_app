@@ -18,6 +18,11 @@ class MovieDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final subtextColor = isDark ? Colors.white54 : Colors.black54;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -25,9 +30,9 @@ class MovieDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 280,
             pinned: true,
-            backgroundColor: const Color(0xFF1A1A2E),
+            backgroundColor: bgColor,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              icon: Icon(Icons.arrow_back_ios, color: textColor),
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -36,12 +41,12 @@ class MovieDetailScreen extends StatelessWidget {
                 children: [
                   MovieImage(path: movie.bannerUrl),
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Color(0xFF1A1A2E)],
-                        stops: [0.4, 1.0],
+                        colors: [Colors.transparent, bgColor],
+                        stops: const [0.4, 1.0],
                       ),
                     ),
                   ),
@@ -76,8 +81,8 @@ class MovieDetailScreen extends StatelessWidget {
                           children: [
                             Text(
                               movie.title,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: textColor,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -111,8 +116,8 @@ class MovieDetailScreen extends StatelessWidget {
                               spacing: 8,
                               runSpacing: 6,
                               children: [
-                                _metaChip(Icons.access_time, movie.duration),
-                                _metaChip(Icons.calendar_today, movie.releaseDate),
+                                _metaChip(Icons.access_time, movie.duration, subtextColor),
+                                _metaChip(Icons.calendar_today, movie.releaseDate, subtextColor),
                                 _ageRatingChip(movie.ageRating),
                               ],
                             ),
@@ -132,11 +137,11 @@ class MovieDetailScreen extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: textColor.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white24),
+                            border: Border.all(color: isDark ? Colors.white24 : Colors.black12),
                           ),
-                          child: Text(g, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                          child: Text(g, style: TextStyle(color: subtextColor, fontSize: 13)),
                         );
                       }).toList(),
                     ),
@@ -145,28 +150,28 @@ class MovieDetailScreen extends StatelessWidget {
 
                   // Description
                   if (movie.description.isNotEmpty) ...[
-                    const Text('Nội dung',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('Nội dung',
+                        style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Text(movie.description,
-                        style: const TextStyle(color: Colors.white70, fontSize: 15, height: 1.5)),
+                        style: TextStyle(color: subtextColor, fontSize: 15, height: 1.5)),
                     const SizedBox(height: 24),
                   ],
 
                   // Director
                   if (movie.director.isNotEmpty) ...[
-                    const Text('Đạo diễn',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('Đạo diễn',
+                        style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Text(movie.director,
-                        style: const TextStyle(color: Colors.white70, fontSize: 15)),
+                        style: TextStyle(color: subtextColor, fontSize: 15)),
                     const SizedBox(height: 24),
                   ],
 
                   // Cast
                   if (movie.cast.isNotEmpty) ...[
-                    const Text('Diễn viên',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('Diễn viên',
+                        style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     SizedBox(
                       height: 80,
@@ -182,7 +187,7 @@ class MovieDetailScreen extends StatelessWidget {
                                 backgroundColor: Colors.white12,
                                 child: Text(
                                   movie.cast[index][0],
-                                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                                  style: TextStyle(color: textColor, fontSize: 18),
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -190,7 +195,7 @@ class MovieDetailScreen extends StatelessWidget {
                                 width: 70,
                                 child: Text(
                                   movie.cast[index],
-                                  style: const TextStyle(color: Colors.white54, fontSize: 11),
+                                  style: TextStyle(color: subtextColor, fontSize: 11),
                                   textAlign: TextAlign.center,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -235,13 +240,13 @@ class MovieDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _metaChip(IconData icon, String text) {
+  Widget _metaChip(IconData icon, String text, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: Colors.white54, size: 14),
+        Icon(icon, color: color, size: 14),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        Text(text, style: TextStyle(color: color, fontSize: 13)),
       ],
     );
   }

@@ -187,11 +187,11 @@ List<List<Seat>> generateSeatMap() {
 final List<MovieNews> mockNews = [
   MovieNews(
     id: '1',
-    title: 'Avatar 4: First Trailer Breaks Viewing Records',
+    title: 'Avatar 3: First Trailer Breaks Viewing Records',
     summary:
         'The first trailer for Avatar: Fire and Ash has broken all-time viewing records '
         'with over 200 million views in 24 hours, surpassing the previous record.',
-    imageUrl: 'assets/images/posters/avatar.jpg',
+    imageUrl: 'assets/images/posters/dune.jpg',
     date: '28 Mar, 2026',
     source: 'Variety',
     tag: 'Hot',

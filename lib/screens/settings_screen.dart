@@ -65,50 +65,6 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 28),
 
-          // ─── GENERAL ───
-          _sectionLabel('Chung', textColor),
-          const SizedBox(height: 12),
-          Container(
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: borderColor),
-            ),
-            child: Column(
-              children: [
-                _settingsTile(
-                  icon: Icons.language,
-                  iconColor: Colors.blue,
-                  title: 'Ngôn ngữ',
-                  subtitle: 'Tiếng Việt',
-                  textColor: textColor,
-                  subtextColor: subtextColor,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
-                ),
-                Divider(height: 1, color: borderColor),
-                _settingsTile(
-                  icon: Icons.notifications_outlined,
-                  iconColor: Colors.orange,
-                  title: 'Thông báo',
-                  subtitle: 'Bật',
-                  textColor: textColor,
-                  subtextColor: subtextColor,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 28),
-
           // ─── ABOUT ───
           _sectionLabel('Thông tin', textColor),
           const SizedBox(height: 12),
@@ -127,45 +83,6 @@ class SettingsScreen extends StatelessWidget {
                   textColor: textColor,
                   subtextColor: subtextColor,
                   onTap: () => _showAboutDialog(context, isDark),
-                ),
-                Divider(height: 1, color: borderColor),
-                _settingsTile(
-                  icon: Icons.description_outlined,
-                  iconColor: Colors.teal,
-                  title: 'Điều khoản sử dụng',
-                  textColor: textColor,
-                  subtextColor: subtextColor,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
-                ),
-                Divider(height: 1, color: borderColor),
-                _settingsTile(
-                  icon: Icons.privacy_tip_outlined,
-                  iconColor: Colors.purple,
-                  title: 'Chính sách bảo mật',
-                  textColor: textColor,
-                  subtextColor: subtextColor,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
-                ),
-                Divider(height: 1, color: borderColor),
-                _settingsTile(
-                  icon: Icons.star_outline,
-                  iconColor: Colors.amber,
-                  title: 'Đánh giá ứng dụng',
-                  textColor: textColor,
-                  subtextColor: subtextColor,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
                 ),
               ],
             ),

@@ -76,12 +76,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1A2E)),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -91,7 +91,13 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Form(
               key: _formKey,
-              child: Column(
+              child: Builder(
+                builder: (context) {
+                  final isDark = Theme.of(context).brightness == Brightness.dark;
+                  final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+                  final subtextColor = isDark ? Colors.white38 : Colors.black38;
+
+                  return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // ─── LOGO ───
@@ -101,19 +107,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     size: 64,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'CINEMA',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: textColor,
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 6,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Đăng nhập để đặt vé',
-                    style: TextStyle(color: Colors.white38, fontSize: 14),
+                    style: TextStyle(color: subtextColor, fontSize: 14),
                   ),
                   const SizedBox(height: 48),
 
@@ -148,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: isDark ? Colors.white : const Color(0xFF1A1A2E)),
                     decoration: _inputDecoration(
                       label: 'Email',
                       icon: Icons.email_outlined,
@@ -169,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: isDark ? Colors.white : const Color(0xFF1A1A2E)),
                     decoration: _inputDecoration(
                       label: 'Mật khẩu',
                       icon: Icons.lock_outline,
@@ -177,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          color: Colors.white38,
+                          color: isDark ? Colors.white38 : Colors.black38,
                           size: 20,
                         ),
                         onPressed: () =>
@@ -199,9 +205,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _handleForgotPassword,
-                      child: const Text(
+                      child: Text(
                         'Quên mật khẩu?',
-                        style: TextStyle(color: Colors.white38, fontSize: 13),
+                        style: TextStyle(color: subtextColor, fontSize: 13),
                       ),
                     ),
                   ),
@@ -244,9 +250,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Chưa có tài khoản? ',
-                        style: TextStyle(color: Colors.white38, fontSize: 14),
+                        style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 14),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.pushNamed(context, '/register'),
@@ -263,6 +269,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
                 ],
+              );
+              },
               ),
             ),
           ),
@@ -272,19 +280,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   InputDecoration _inputDecoration({required String label, required IconData icon}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hintColor = isDark ? Colors.white38 : Colors.black38;
+    final fillColor = isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04);
+    final borderColor = isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.1);
+
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.white38),
-      prefixIcon: Icon(icon, color: Colors.white38, size: 20),
+      labelStyle: TextStyle(color: hintColor),
+      prefixIcon: Icon(icon, color: hintColor, size: 20),
       filled: true,
-      fillColor: Colors.white.withOpacity(0.06),
+      fillColor: fillColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
+        borderSide: BorderSide(color: borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),

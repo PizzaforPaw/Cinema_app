@@ -138,17 +138,17 @@ class _MovieFormScreenState extends State<MovieFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1A2E)),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           _isEditing ? 'Sửa phim' : 'Thêm phim mới',
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1A2E), fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -379,7 +379,7 @@ class _MovieFormScreenState extends State<MovieFormScreen> {
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboardType,
-      style: const TextStyle(color: Colors.white, fontSize: 14),
+      style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1A2E), fontSize: 14),
       validator: validator,
       onChanged: onChanged,
       decoration: InputDecoration(
@@ -421,8 +421,8 @@ class _MovieFormScreenState extends State<MovieFormScreen> {
       value: value,
       items: items,
       onChanged: onChanged,
-      dropdownColor: const Color(0xFF16213E),
-      style: const TextStyle(color: Colors.white, fontSize: 14),
+      dropdownColor: Theme.of(context).colorScheme.surface,
+      style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF1A1A2E), fontSize: 14),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.white38, fontSize: 13),

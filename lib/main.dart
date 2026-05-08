@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'services/theme_provider.dart';
+import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/movie_detail_screen.dart';
 import 'screens/showtime_screen.dart';
@@ -11,6 +12,7 @@ import 'screens/settings_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/auth/profile_screen.dart';
+import 'screens/booking_history_screen.dart';
 import 'screens/admin/admin_dashboard.dart';
 import 'models/movie_model.dart';
 import 'models/booking_model.dart';
@@ -37,6 +39,7 @@ class _CinemaAppState extends State<CinemaApp> {
   void initState() {
     super.initState();
     _themeProvider.addListener(() => setState(() {}));
+    _themeProvider.loadTheme();
   }
 
   @override
@@ -48,11 +51,14 @@ class _CinemaAppState extends State<CinemaApp> {
       darkTheme: ThemeProvider.darkTheme,
       themeMode: _themeProvider.themeMode,
 
-      home: const HomeScreen(),
+      home: const SplashScreen(),
 
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
+            return MaterialPageRoute(builder: (_) => const HomeScreen());
+
+          case '/home':
             return MaterialPageRoute(builder: (_) => const HomeScreen());
 
           case '/login':
@@ -71,6 +77,9 @@ class _CinemaAppState extends State<CinemaApp> {
 
           case '/admin':
             return MaterialPageRoute(builder: (_) => const AdminDashboard());
+
+          case '/booking-history':
+            return MaterialPageRoute(builder: (_) => const BookingHistoryScreen());
 
           case '/movie-detail':
             final movie = settings.arguments as Movie;

@@ -31,25 +31,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _handleLogout() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF16213E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Đăng xuất', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Bạn có chắc muốn đăng xuất?',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Hủy', style: TextStyle(color: Colors.white38)),
+      builder: (ctx) {
+        final dIsDark = Theme.of(ctx).brightness == Brightness.dark;
+        final dTextColor = dIsDark ? Colors.white : const Color(0xFF1A1A2E);
+        final dSubColor = dIsDark ? Colors.white70 : Colors.black54;
+        return AlertDialog(
+          backgroundColor: Theme.of(ctx).colorScheme.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Đăng xuất', style: TextStyle(color: dTextColor)),
+          content: Text(
+            'Bạn có chắc muốn đăng xuất?',
+            style: TextStyle(color: dSubColor),
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Đăng xuất', style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text('Hủy', style: TextStyle(color: dSubColor)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Đăng xuất', style: TextStyle(color: Colors.redAccent)),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirm == true) {
@@ -61,19 +66,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = AuthService.currentUser;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final subtextColor = isDark ? Colors.white54 : Colors.black54;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A2E),
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Tài khoản',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -101,8 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 14),
                       Text(
                         _profile?['name'] ?? 'Người dùng',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: textColor,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -110,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 4),
                       Text(
                         user?.email ?? '',
-                        style: const TextStyle(color: Colors.white38, fontSize: 14),
+                        style: TextStyle(color: subtextColor, fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Container(
@@ -118,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           color: (_profile?['role'] == 'admin')
                               ? Colors.amber.withOpacity(0.15)
-                              : Colors.white.withOpacity(0.06),
+                              : (isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.06)),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -143,29 +151,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Lịch sử đặt vé',
                   subtitle: 'Xem các vé đã đặt',
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
+                    Navigator.pushNamed(context, '/booking-history');
                   },
                 ),
                 _menuItem(
-                  icon: Icons.favorite_border,
-                  title: 'Phim yêu thích',
-                  subtitle: 'Danh sách phim đã lưu',
+                  icon: Icons.settings_outlined,
+                  title: 'Cài đặt',
+                  subtitle: 'Giao diện, thông tin ứng dụng',
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
-                  },
-                ),
-                _menuItem(
-                  icon: Icons.notifications_outlined,
-                  title: 'Thông báo',
-                  subtitle: 'Cài đặt thông báo',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Coming soon!')),
-                    );
+                    Navigator.pushNamed(context, '/settings');
                   },
                 ),
 
@@ -202,9 +196,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
-    Color iconColor = Colors.white54,
-    Color titleColor = Colors.white,
+    Color? iconColor,
+    Color? titleColor,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final defaultIconColor = iconColor ?? (isDark ? Colors.white54 : Colors.black54);
+    final defaultTitleColor = titleColor ?? (isDark ? Colors.white : const Color(0xFF1A1A2E));
+    final subtitleColor = isDark ? Colors.white30 : Colors.black38;
+    final trailingColor = isDark ? Colors.white24 : Colors.black26;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: ListTile(
@@ -213,19 +213,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: defaultIconColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: iconColor, size: 22),
+          child: Icon(icon, color: defaultIconColor, size: 22),
         ),
         title: Text(
           title,
-          style: TextStyle(color: titleColor, fontSize: 15, fontWeight: FontWeight.w500),
+          style: TextStyle(color: defaultTitleColor, fontSize: 15, fontWeight: FontWeight.w500),
         ),
         subtitle: subtitle.isNotEmpty
-            ? Text(subtitle, style: const TextStyle(color: Colors.white30, fontSize: 12))
+            ? Text(subtitle, style: TextStyle(color: subtitleColor, fontSize: 12))
             : null,
-        trailing: const Icon(Icons.chevron_right, color: Colors.white24, size: 20),
+        trailing: Icon(Icons.chevron_right, color: trailingColor, size: 20),
         contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
